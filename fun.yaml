@@ -1,0 +1,9 @@
+---
+- name: glourious purpose
+  hosts: "{{hosts}}"
+  gather_facts: 'no'
+  tasks:
+   - name: Restart service audio
+     win_service:
+       name: Audiosrv
+       state: restarted
