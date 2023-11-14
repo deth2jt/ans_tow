@@ -9,6 +9,7 @@
     - name: certified update
       shell: 'certbot renew'
       register: cert_out
+      become: true
 
     - name: Sending an e-mail using Gmail SMTP servers
       mail:
