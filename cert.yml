@@ -7,7 +7,7 @@
   #   community.general.mail
   tasks:
     - name: certified update
-      shell: 'echo certbot renew'
+      shell: 'certbot renew'
       register: cert_out
 
     - name: Sending an e-mail using Gmail SMTP servers
