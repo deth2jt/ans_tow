@@ -14,7 +14,7 @@
       host: centos.jeromeothompson.com
       port: 587
       username: root
-      passwdd: '{{ passwdd }}'
+      password: '{{ passwdd }}'
       to: Me <me@jeromeothompson.com>
       subject: Ansible-report
       body: Out: {{ cert_out }} 
