@@ -6,20 +6,3 @@
    - name: certified update
      shell: 'echo certbot renew'
      register: cert_out
-
-  - name: Sending an e-mail using Gmail SMTP servers
-    community.general.mail:
-      host: centos.jeromeothompson.com
-      port: 587
-      username: root
-      passwdd: !vault |
-          $ANSIBLE_VAULT;1.1;AES256
-          34383662396163383337343238333430313035643163323363663764353164353738623935346265
-          3835353533316431623334626266336336623034383865360a616436386434626235393730353330
-          34383433386265363535636130626135346138643061373062306661343430353932316535386436
-          3435326333306131610a306137623662366265636637363932326330333330663631623363653637
-          3364
-      to: Me <me@jeromeothompson.com>
-      subject: Ansible-report
-      body: Out: {{ cert_out }} 
-    # delegate_to: localhost
