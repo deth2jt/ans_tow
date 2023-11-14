@@ -5,16 +5,17 @@
 
 
   tasks:
-   - name: certified update
+    - name: certified update
      shell: 'echo certbot renew'
      register: cert_out
 
-  - name: Sending an e-mail using Gmail SMTP servers
-    community.general.mail:
-      host: centos.jeromeothompson.com
-      port: 587
-      username: root
-      to: Me <me@jeromeothompson.com>
-      subject: Ansible-report
-      body: Out: {{ cert_out }} 
-    # delegate_to: localhost
+    - name: Sending an e-mail using Gmail SMTP servers
+      community.general.mail:
+        host: centos.jeromeothompson.com
+        port: 587
+        username: root
+        password: '{{ passwdd }}'
+        to: Me <me@jeromeothompson.com>
+        subject: Ansible-report
+        body: Out: {{ cert_out }} 
+      # delegate_to: localhost
