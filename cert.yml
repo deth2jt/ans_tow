@@ -13,10 +13,13 @@
     - name: Sending an e-mail using Gmail SMTP servers
       mail:
         host: centos.jeromeothompson.com
-        port: 465
+        port: 587
         sender: me
         username: me
         password: '{{ passwdd }}'
         to: Me <me@jeromeothompson.com>
         subject: Ansible-report
         body: 'Out: {{ cert_out }}' 
+        secure: starttls
+      delegate_to: localhost
+      when: cert_out.changed
