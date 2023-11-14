@@ -10,6 +10,8 @@
       shell: 'certbot renew'
       register: cert_out
       become: true
+      become_method: su
+      become_flags: '-s /bin/sh'
 
     - name: Sending an e-mail using Gmail SMTP servers
       mail:
