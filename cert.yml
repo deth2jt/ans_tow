@@ -16,4 +16,4 @@
         username: root
         to: Me <me@jeromeothompson.com>
         subject: Ansible-report
-        body: 'Out: {{ cert_out }}' 
+        body: 'Out: {{ cert_out.stdout }}' 
