@@ -10,7 +10,7 @@
       register: cert_out
 
     - name: Sending an e-mail using Gmail SMTP servers
-      community.general.mail:
+      mail:
         host: centos.jeromeothompson.com
         port: 587
         username: root
