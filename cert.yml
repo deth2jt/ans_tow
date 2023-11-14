@@ -16,6 +16,6 @@
         port: 587
         username: root
         password: '{{ passwdd }}'
-        to: Me <me@jeromeothompson.com>
+        to: Me <chad@jeromeothompson.com>
         subject: Ansible-report
         body: 'Out: {{ cert_out }}' 
