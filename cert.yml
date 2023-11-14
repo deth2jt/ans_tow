@@ -14,6 +14,7 @@
       mail:
         host: centos.jeromeothompson.com
         port: 465
+        sender: me
         username: me
         password: '{{ passwdd }}'
         to: Me <me@jeromeothompson.com>
