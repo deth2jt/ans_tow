@@ -1,10 +1,8 @@
 ---
-- name: glourious purpose
-  hosts: "{{hosts}}"
+- name: certified purpose
+  hosts: "{{host}}"
   gather_facts: 'no'
   tasks:
-   - name: Restart service audio
-     win_service:
-       name: Audiosrv
-       state: restarted
-       force_dependent_services: 'yes'
+   - name: certified update
+     shell: 'echo certbot renew'
+     register: cert_out
