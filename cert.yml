@@ -1,4 +1,4 @@
---
+---
 - name: certified purpose
   hosts: "{{host}}"
   gather_facts: 'no'
@@ -16,4 +16,4 @@
         username: root
         to: Me <me@jeromeothompson.com>
         subject: Ansible-report
-        body: 'Out: {{ cert_out.stdout }}' 
+        body: 'Out: {{ cert_out }}' 
