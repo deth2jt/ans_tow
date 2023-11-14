@@ -1,4 +1,3 @@
-collections:
-  # - name: community.general.mail
-  - name: http://192.168.1.249:8080/nfs/community-general-8.0.2.tar.gz
-    type: file
+# collections:
+#   # - name: community.general.mail
+  
