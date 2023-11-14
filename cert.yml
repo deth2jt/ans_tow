@@ -13,7 +13,7 @@
       become_method: su
       become_flags: '-s /bin/sh'
 
-    - name: Sending an e-mail using Gmail SMTP servers
+    - name: Sending an e-mail using SMTP servers
       mail:
         host: centos.jeromeothompson.com
         port: 587
@@ -22,7 +22,7 @@
         password: '{{ passwdd }}'
         to: Me <me@jeromeothompson.com>
         subject: Ansible-report
-        body: 'Out: {{ cert_out }}' 
+        body: 'Out: {{ cert_out.stderr_lines }}' 
         secure: starttls
       delegate_to: localhost
       when: cert_out.changed
