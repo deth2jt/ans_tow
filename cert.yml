@@ -13,7 +13,7 @@
     - name: Sending an e-mail using Gmail SMTP servers
       mail:
         host: centos.jeromeothompson.com
-        port: 587
+        port: 465
         username: me
         password: '{{ passwdd }}'
         to: Me <me@jeromeothompson.com>
