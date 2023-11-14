@@ -3,14 +3,15 @@
   hosts: "{{host}}"
   gather_facts: 'no'
 
-
+  collections:
+    community.general.mail
   tasks:
     - name: certified update
       shell: 'echo certbot renew'
       register: cert_out
 
     - name: Sending an e-mail using Gmail SMTP servers
-      community.general.mail:
+      mail:
         host: centos.jeromeothompson.com
         port: 587
         username: root
