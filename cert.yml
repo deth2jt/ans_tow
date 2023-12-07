@@ -3,8 +3,9 @@
   hosts: "{{host}}"
   gather_facts: 'no'
 
-  # collections:
-  #   community.general.mail
+  collections:
+    community.general.mail
+    
   tasks:
     - name: certified update
       shell: 'certbot renew'
