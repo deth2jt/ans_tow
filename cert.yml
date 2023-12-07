@@ -4,7 +4,7 @@
   gather_facts: 'no'
 
   collections:
-    community.general.mail
+    - community.general.mail
     
   tasks:
     - name: certified update
