@@ -14,13 +14,13 @@
       become_flags: '-s /bin/sh'
 
     - name: Sending an e-mail using SMTP servers
-      mail:
-        host: centos.jeromeothompson.com
+      community.general.mail:
+        host: '{{ mail_host }}'
         port: 587
         sender: me
         username: me
         password: '{{ passwdd }}'
-        to: Me <me@jeromeothompson.com>
+        to: '{{ to_v }}'
         subject: Ansible-report
         body: 'Out: {{ cert_out.stderr_lines }}' 
         secure: starttls
