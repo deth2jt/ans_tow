@@ -18,8 +18,8 @@
       community.general.mail:
         host: '{{ mail_host }}'
         port: '{{ port }}'
-        sender: me
-        username: me
+        sender: '{{ sender }}'
+        username: '{{ username }}'
         password: '{{ passwdd }}'
         to: '{{ to_v }}'
         subject: Ansible-report
