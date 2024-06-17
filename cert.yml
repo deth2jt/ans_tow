@@ -17,7 +17,7 @@
     - name: Sending an e-mail using SMTP servers
       community.general.mail:
         host: '{{ mail_host }}'
-        port: 587
+        port: '{{ port }}'
         sender: me
         username: me
         password: '{{ passwdd }}'
