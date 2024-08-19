@@ -6,3 +6,8 @@ python3 -m pip install pywinrm
 https://docs.ansible.com/ansible/2.9/modules/win_service_module.html 
 
 winrm e winrm/config/listener
+
+
+
+
+https://github.com/TheRealHaoLiu/demo-awx-vaulted-vars
