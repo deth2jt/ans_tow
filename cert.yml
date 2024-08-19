@@ -25,5 +25,6 @@
         subject: Ansible-report
         body: 'Out: {{ cert_out.stderr_lines }}' 
         secure: starttls
+      no_log: true
       delegate_to: localhost
       when: cert_out.changed
