@@ -15,8 +15,8 @@
       become_flags: '-s /bin/sh'
 
     - name: Sending an e-mail using SMTP servers
-      #community.general.mail:
-      mail2:
+      community.general.mail:
+      #mail2:
         host: '{{ mail_host }}'
         port: '{{ port }}'
         sender: '{{ sender }}'
