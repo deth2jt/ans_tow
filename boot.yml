@@ -1,0 +1,43 @@
+---
+- name: relife purpose
+  hosts: "{{host}}"
+  gather_facts: 'no'
+
+
+    
+  tasks:
+
+    - name: Reboot {{host}}
+      block: 
+
+      - name: Reboot msg {{host}}
+        ansible.builtin.debug:
+          msg: System reboot
+      - name: test command 
+        ansible.builtin.command: "ls"
+      - name: "Reboot action: {{host}}"
+        # ansible.builtin.reboot:
+        #   reboot_command: /usr/sbin/reboot
+        #   reboot_timeout: 3600
+        ansible.builtin.shell: "sleep 30; /usr/sbin/reboot"
+        become: true
+        become_user: root      
+      when: act == 'reboot'
+      
+    
+    - name: Shutdown {{host}} 
+      block:
+      - name: Shutdown msg {{host}}
+        ansible.builtin.debug:
+          msg: System shut
+      - name: test command 
+        ansible.builtin.command: "ls"
+        
+      
+      - name: "Shutdown action: {{host}}"
+        # ansible.builtin.reboot:
+        #   delay: 30
+        ansible.builtin.shell: "sleep 30; /usr/sbin/shutdown"
+        become: true
+        become_user: root    
+      when: act == 'shut'
