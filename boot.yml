@@ -1,5 +1,5 @@
 ---
-- name: relife purpose
+- name: life's purpose
   hosts: "{{host}}"
   gather_facts: 'no'
 
