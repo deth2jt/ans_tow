@@ -13,8 +13,8 @@
       - name: Reboot msg {{host}}
         ansible.builtin.debug:
           msg: System reboot
-      - name: test command 
-        ansible.builtin.command: "ls"
+      # - name: test command 
+      #   ansible.builtin.command: "ls"
       - name: "Reboot action: {{host}}"
         # ansible.builtin.reboot:
         #   reboot_command: /usr/sbin/reboot
@@ -30,8 +30,8 @@
       - name: Shutdown msg {{host}}
         ansible.builtin.debug:
           msg: System shut
-      - name: test command 
-        ansible.builtin.command: "ls"
+      # - name: test command 
+      #   ansible.builtin.command: "ls"
         
       
       - name: "Shutdown action: {{host}}"
