@@ -47,7 +47,7 @@
         become_user: root    
       when: act == 'shut'
 
-    - name: Wait for the {{ act }} to complete if there was a change.
+    - name: Wait for the {{ act }} to complete
       wait_for_connection:
         connect_timeout: 20
         sleep: 5
