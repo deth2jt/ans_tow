@@ -19,7 +19,10 @@
         # ansible.builtin.reboot:
         #   reboot_command: /usr/sbin/reboot
         #   reboot_timeout: 3600
-        ansible.builtin.shell: "sleep 30; /usr/sbin/reboot"
+        # ansible.builtin.shell: "sleep 30; /usr/sbin/reboot"
+        ansible.builtin.shell: "sleep 30; /usr/sbin/shutdown -r +1"
+        async: 1
+        poll: 0
         become: true
         become_user: root      
       when: act == 'reboot'
@@ -37,7 +40,17 @@
       - name: "Shutdown action: {{host}}"
         # ansible.builtin.reboot:
         #   delay: 30
-        ansible.builtin.shell: "sleep 30; /usr/sbin/shutdown"
+        ansible.builtin.shell: "sleep 30; /usr/sbin/shutdown +1"
+        async: 1
+        poll: 0
         become: true
         become_user: root    
       when: act == 'shut'
+
+    - name: Wait for the {{ act }} to complete if there was a change.
+      wait_for_connection:
+        connect_timeout: 20
+        sleep: 5
+        delay: 5
+        timeout: 300
+      when: (act == 'shut') or (act == 'reboot')
