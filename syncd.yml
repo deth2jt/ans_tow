@@ -30,7 +30,7 @@
 
   tasks:
 
-    - name: Change file ownership, group and permissions
+    - name: Add mnt folder locations 
       ansible.builtin.file:
         path: "{{ item.local }}"
         state: directory
@@ -40,7 +40,7 @@
       loop: '{{ path_list }}'
 
 
-    - name: Mount an NFS volume
+    - name: Mount an NFS volumes
       ansible.posix.mount:
         src: "{{ nfs_srv }}:{{ item.remote }}"
         path: "{{ item.local }}"
@@ -60,13 +60,13 @@
       loop: '{{ path_list }}'
       # delegate_to: "{{ host }}"
 
-    - name: Unmount a mounted volume
+    - name: Unmount nfs mounted volume
       ansible.posix.mount:
         path: "{{ item.local }}"
         state: unmounted
       loop: '{{ path_list }}'
 
-    - name: Remove files created
+    - name: Remove nfs locations created
       ansible.builtin.file:
         path: "{{ item.local }}"
         # owner: foo
