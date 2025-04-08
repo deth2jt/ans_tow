@@ -51,7 +51,7 @@
 
 
     - name: Synchronization using rsync protocol on cld
-      shell: rsync -avhrt  "{{ item.local }}/" "{{ item.cld }}/"
+      shell: rsync --ignore-existing -avhrt  "{{ item.local }}/" "{{ item.cld }}/"
       # ansible.posix.synchronize:
       #   src: "{{ item.local }}/"
       #   # dest: rsync:"{{ mycld }}/{{ item.cld }}/"
