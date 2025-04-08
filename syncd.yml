@@ -1,0 +1,76 @@
+---
+# - name: Environment
+#   hosts: localhost
+#   connection: local
+#   gather_facts: False
+
+
+#   # environment:
+#   #   OPENSSL_CONF: /var/tmp/openssl.cnf
+
+#   tasks:
+#     - name: customize /etc/environment
+#       ansible.builtin.lineinfile:
+#         dest: "/etc/environment"
+#         state: present
+#         regexp: "^OPENSSL_CONF="
+#         line: "OPENSSL_CONF=/var/tmp/openssl.cnf"
+
+- name: "Renewed purpose"
+  # hosts: localhost
+  hosts: '{{ host }}'
+  gather_facts: false
+  # become: true
+
+
+  vars:
+    path_list:
+      - { remote: '/mnt/user/nfs', local: '/mnt/nfs11', cld: '/DataVolume/shares/Bump' }
+      - { remote: '/mnt/user/vmdata', local: '/mnt/vmdata11', cld: '/DataVolume/shares/dtad' }
+
+  tasks:
+
+    - name: Change file ownership, group and permissions
+      ansible.builtin.file:
+        path: "{{ item.local }}"
+        state: directory
+        # owner: foo
+        # group: foo
+        mode: '0755'
+      loop: '{{ path_list }}'
+
+
+    - name: Mount an NFS volume
+      ansible.posix.mount:
+        src: "{{ nfs_srv }}:{{ item.remote }}"
+        path: "{{ item.local }}"
+        opts: nfsvers=3,rw,relatime,user
+        state: mounted
+        fstype: nfs
+      loop: '{{ path_list }}'
+
+
+    - name: Synchronization using rsync protocol on cld
+      shell: rsync -avhrt  "{{ item.local }}/" "{{ item.cld }}/"
+      # ansible.posix.synchronize:
+      #   src: "{{ item.local }}/"
+      #   # dest: rsync:"{{ mycld }}/{{ item.cld }}/"
+      #   dest: "{{ item.cld }}/"
+      # delegate_to: localhost
+      loop: '{{ path_list }}'
+      # delegate_to: "{{ host }}"
+
+    - name: Unmount a mounted volume
+      ansible.posix.mount:
+        path: "{{ item.local }}"
+        state: unmounted
+      loop: '{{ path_list }}'
+
+    - name: Remove files created
+      ansible.builtin.file:
+        path: "{{ item.local }}"
+        # owner: foo
+        # group: foo
+        state: "absent"
+        # mode: '0755'
+      loop: '{{ path_list }}'
