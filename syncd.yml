@@ -27,6 +27,7 @@
     path_list:
       - { remote: '/mnt/user/nfs', local: '/mnt/nfs11', cld: '/DataVolume/shares/Bump' }
       - { remote: '/mnt/user/vmdata', local: '/mnt/vmdata11', cld: '/DataVolume/shares/dtad' }
+      - { remote: '/mnt/user/tmpshr', local: '/mnt/tmpshr11', cld: '/DataVolume/shares/pihad' }
 
   tasks:
 
