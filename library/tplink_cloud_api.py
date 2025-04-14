@@ -435,7 +435,7 @@ def main():
 
     # print(args.username, args.password, args.device, args.child)
 
-    tplink = TPLink(args.username, args.password, args.termID)
+    tplink = TPLink(args.username, args.password, args.tid)
 
     pp = pprint.PrettyPrinter()
     if args.command == 'list':
