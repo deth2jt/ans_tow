@@ -118,11 +118,12 @@ class TPLink:
         return json_response['result']
 
 
-    def __init__(self, username: str, password: str):
+    def __init__(self, username: str, password: str, termID: str):
         self.username = username
         self.password = password
-        self.termID = 'c26fc892-f05b-4cc4-acad-f34470d5c10d'
+        # self.termID = 'c26fc892-f05b-4cc4-acad-f34470d5c10d'
         self.url = 'https://euw1-wap.tplinkcloud.com'
+        self.termID = termID
 
         request = {
             'method': 'POST',
@@ -414,6 +415,10 @@ def main():
         required=False,
         help='The human readable child name of the device')
     parser.add_argument(
+        '--tid',
+        required=False,
+        help='terminalID of the device just cause')
+    parser.add_argument(
         '--username',
         required=True,
         help='Username for the account')
@@ -430,7 +435,7 @@ def main():
 
     # print(args.username, args.password, args.device, args.child)
 
-    tplink = TPLink(args.username, args.password)
+    tplink = TPLink(args.username, args.password, args.termID)
 
     pp = pprint.PrettyPrinter()
     if args.command == 'list':
