@@ -105,6 +105,7 @@
       loop: '{{ path_list }}'
       # delegate_to: "{{ host }}"
       ignore_errors: yes 
+      when: todo is undefined
 
 
     - name: Unmount nfs mounted volumes
