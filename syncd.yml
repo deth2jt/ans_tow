@@ -16,6 +16,13 @@
 #         regexp: "^OPENSSL_CONF="
 #         line: "OPENSSL_CONF=/var/tmp/openssl.cnf"
 
+# https://docs.joshuatz.com/random/tp-link-kasa/
+# https://www.uuidgenerator.net/version4
+# https://www.tp-link.com/jp/support/faq/3542/
+# https://github.com/seemong/py-tplink-cloud-api/tree/master
+# https://python-kasa.readthedocs.io/en/latest/cli.html#provisioning
+
+
 - name: "Renewed purpose"
   # hosts: localhost
   hosts: '{{ host }}'
@@ -30,6 +37,33 @@
       - { remote: '/mnt/user/tmpshr', local: '/mnt/tmpshr11', cld: '/DataVolume/shares/pihad' }
 
   tasks:
+    - name: Install python package
+      ansible.builtin.pip:
+        name: '{{ item }}'
+      loop:
+        - argparse
+        - certifi
+        # - json
+        # - pdb
+        # - pprint
+        # - ssl
+        # - sys
+        # - time
+        - typing 
+        - urllib3
+      delegate_to: localhost
+
+    - name: execute turn on dev script
+      # ansible.builtin.script:
+      shell: python library/tplink_cloud_api.py turnonchild --username='{{ usernm }}' --password="{{ passwd }}" --device="{{ dev }}" --child="{{ child }}"
+        # chdir: /tmp
+      delegate_to: localhost
+
+    - name: Wait 300 seconds, but only start checking after 120 seconds
+      ansible.builtin.wait_for_connection:
+        delay: 120
+        timeout: 300
+
 
     - name: Add mnt folder locations 
       ansible.builtin.file:
@@ -41,7 +75,7 @@
       loop: '{{ path_list }}'
 
 
-    - name: Mount an NFS volumes
+    - name: Mount NFS volumes
       ansible.posix.mount:
         src: "{{ nfs_srv }}:{{ item.remote }}"
         path: "{{ item.local }}"
@@ -49,7 +83,17 @@
         state: mounted
         fstype: nfs
       loop: '{{ path_list }}'
+      tags: mount
 
+
+    - name: Add cld folder locations 
+      ansible.builtin.file:
+        path: "{{ item.cld }}"
+        state: directory
+        # owner: foo
+        # group: foo
+        # mode: '0755'
+      loop: '{{ path_list }}'
 
     - name: Synchronization using rsync protocol on cld
       shell: rsync --ignore-existing -avhrt  "{{ item.local }}/" "{{ item.cld }}/"
@@ -60,12 +104,15 @@
       # delegate_to: localhost
       loop: '{{ path_list }}'
       # delegate_to: "{{ host }}"
+      ignore_errors: yes 
 
-    - name: Unmount nfs mounted volume
+
+    - name: Unmount nfs mounted volumes
       ansible.posix.mount:
         path: "{{ item.local }}"
         state: unmounted
       loop: '{{ path_list }}'
+      tags: umount
 
     - name: Remove nfs locations created
       ansible.builtin.file:
@@ -75,3 +122,20 @@
         state: "absent"
         # mode: '0755'
       loop: '{{ path_list }}'
+
+    - name: Pause for 60 seconds before shutdown
+      ansible.builtin.pause:
+        seconds: 60
+
+    - name: Shutdown device
+      shell:  /sbin/shutdown -h -P now
+
+    - name: Pause for 2 minutes to allow for shutdown
+      ansible.builtin.pause:
+        minutes: 2
+
+    - name: execute turn off dev script
+      # ansible.builtin.script:
+      shell: python library/tplink_cloud_api.py turnoffchild --username='{{ usernm }}' --password="{{ passwd }}" --device="{{ dev }}" --child="{{ child }}"
+        # chdir: /tmp
+      delegate_to: localhost
