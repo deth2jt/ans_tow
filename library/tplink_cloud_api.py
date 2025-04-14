@@ -433,7 +433,7 @@ def main():
     )
     args = parser.parse_args()
 
-    # print(args.username, args.password, args.device, args.child)
+    print(args.username, args.password, args.device, args.child)
 
     tplink = TPLink(args.username, args.password, args.tid)
 
