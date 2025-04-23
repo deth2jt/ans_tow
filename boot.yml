@@ -20,7 +20,7 @@
         #   reboot_command: /usr/sbin/reboot
         #   reboot_timeout: 3600
         # ansible.builtin.shell: "sleep 30; /usr/sbin/reboot"
-        ansible.builtin.shell: "sleep 30; /usr/sbin/shutdown -r +1"
+        ansible.builtin.shell: "sleep 30; shutdown -r +1"
         async: 1
         poll: 0
         become: true
