@@ -42,8 +42,8 @@
         #   delay: 30
         # ansible.builtin.shell: "sleep 30; /usr/sbin/shutdown +1"
         ansible.builtin.shell: "shutdown +1"
-        async: 1
-        poll: 0
+        # async: 1
+        # poll: 0
         become: true
         become_user: root    
       when: act == 'shut'
@@ -54,4 +54,5 @@
         sleep: 5
         delay: 5
         timeout: 300
-      when: (act == 'shut') or (act == 'reboot')
+      #when: (act == 'shut') or (act == 'reboot')
+      when:  (act == 'reboot')
