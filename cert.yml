@@ -24,7 +24,8 @@
         password: '{{ passwdd }}'
         to: '{{ to_v }}'
         subject: Ansible-report
-        body: 'Out: {{ cert_out.stderr_lines }}' 
+        # body: 'Out: {{ cert_out.stderr_lines }}' 
+        body: 'Out: {{ cert_out.stdout_lines }}' 
         secure: starttls
       #no_log: true
       delegate_to: localhost
