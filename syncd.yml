@@ -59,10 +59,10 @@
         # chdir: /tmp
       delegate_to: localhost
 
-    - name: Wait 300 seconds, but only start checking after 120 seconds
+    - name: Wait 600 seconds, but only start checking after 120 seconds
       ansible.builtin.wait_for_connection:
         delay: 120
-        timeout: 300
+        timeout: 600
 
 
     - name: Add mnt folder locations 
