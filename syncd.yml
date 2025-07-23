@@ -58,6 +58,7 @@
       shell: python library/tplink_cloud_api.py turnonchild --username='{{ usernm }}' --password="{{ passwd }}" --device="{{ dev }}" --child="{{ child }}" --tid="{{ tid }}"
         # chdir: /tmp
       delegate_to: localhost
+      no_log: True
 
     - name: Wait 1440 seconds, but only start checking after 720 seconds
       ansible.builtin.wait_for_connection:
@@ -140,3 +141,4 @@
       shell: python library/tplink_cloud_api.py turnoffchild --username='{{ usernm }}' --password="{{ passwd }}" --device="{{ dev }}" --child="{{ child }}" --tid="{{ tid }}"
         # chdir: /tmp
       delegate_to: localhost
+      no_log: True
