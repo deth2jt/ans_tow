@@ -1,0 +1,30 @@
+---
+# tasks file for cloud_coonect
+- name: Install python package
+  ansible.builtin.debug:
+    msg: "The value of my_variable setup"
+  # ansible.builtin.pip:
+  #   name: '{{ item }}'
+  # loop:
+  #   - argparse
+  #   - certifi
+  #   # - json
+  #   # - pdb
+  #   # - pprint
+  #   # - ssl
+  #   # - sys
+  #   # - time
+  #   - typing
+  #   - urllib3
+  delegate_to: localhost
+  tags: py_setup
+
+
+
+# - name: Wait '{{ wait_secs }}' seconds, but only start checking after {{ after_time_secs }} seconds
+#   ansible.builtin.wait_for_connection:
+#     delay: '{{ after_time_secs }}' # 720
+#     timeout: '{{ wait_secs }}' # 1440
+#   tags: py_tun_on
+
+

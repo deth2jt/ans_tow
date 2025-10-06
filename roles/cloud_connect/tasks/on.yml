@@ -1,0 +1,13 @@
+---
+
+- name: Execute turn on dev script
+  ansible.builtin.debug:
+    msg: "The value of my_variable on"
+  # ansible.builtin.shell: |
+  #   python library/tplink_cloud_api.py turnonchild --username='{{ usernm }}' --password="{{ passwd }}" --device="{{ dev }}"
+  #   --child="{{ child }}" --tid="{{ tid }}"
+  # # chdir: /tmp
+  # delegate_to: localhost
+  # no_log: true
+  tags: py_tun_on
+  # changed_when: my_output.rc != 0
