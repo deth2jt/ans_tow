@@ -37,16 +37,16 @@
       - { remote: '/mnt/user/tmpshr', local: '/mnt/tmpshr11', cld: '/DataVolume/shares/pihad' }
     
 
-  # pre_tasks:
-  #   - name: Include cloud_connect role (main)
-  #     ansible.builtin.include_role:
-  #       name: cloud_connect
-  #       tasks_from: main.yml  
+  pre_tasks:
+    - name: Include cloud_connect role (main)
+      ansible.builtin.include_role:
+        name: cloud_connect
+        tasks_from: main.yml  
 
-  #   - name: Include cloud_connect role (on)
-  #     ansible.builtin.include_role:
-  #       name: cloud_connect
-  #       tasks_from: on.yml 
+    - name: Include cloud_connect role (on)
+      ansible.builtin.include_role:
+        name: cloud_connect
+        tasks_from: on.yml 
 
 
 
@@ -76,36 +76,20 @@
       ansible.builtin.file:
         path: "{{ item.cld }}"
         state: directory
-        # owner: foo
-        # group: foo
-        # mode: '0755'
+
+        mode: '0755'
       loop: '{{ path_list }}'
 
     - name: Synchronization using rsync protocol to cld
-      # ansible.builtin.debug:
-      #   msg: '{{ todo is undefined }} - {{ ( toCld) }} - - {{ ( toCld == true  ) }} -- - - {{ ( (toCld | bool) == true  ) }}'
+
       shell: rsync --ignore-existing -avhrt  "{{ item.local }}/" "{{ item.cld }}/"
-      # ansible.posix.synchronize:
-      #   src: "{{ item.local }}/"
-      #   # dest: rsync:"{{ mycld }}/{{ item.cld }}/"
-      #   dest: "{{ item.cld }}/"
-      # delegate_to: localhost
       loop: '{{ path_list }}'
-      # delegate_to: "{{ host }}"
       ignore_errors: yes 
       when: todo is undefined and  (toCld | bool)
 
     - name: Synchronization using rsync protocol to storage 
       shell: rsync --ignore-existing -avhrt  "{{ item.cld }}/" "{{ item.local }}/"
-      # ansible.builtin.debug:
-      #   msg: "The value of my_variable is off"
-      # ansible.posix.synchronize:
-      #   src: "{{ item.local }}/"
-      #   # dest: rsync:"{{ mycld }}/{{ item.cld }}/"
-      #   dest: "{{ item.cld }}/"
-      # delegate_to: localhost
       loop: '{{ path_list }}'
-      # delegate_to: "{{ host }}"
       ignore_errors: yes 
       when: todo is undefined and (not  (toCld | bool))
 
@@ -120,10 +104,7 @@
     - name: Remove nfs locations created
       ansible.builtin.file:
         path: "{{ item.local }}"
-        # owner: foo
-        # group: foo
         state: "absent"
-        # mode: '0755'
       loop: '{{ path_list }}'
 
     - name: Pause for 60 seconds before shutdown
@@ -139,8 +120,8 @@
 
 
 
-  # post_tasks:
-  #   - name: Include cloud_connect role (off)
-  #     ansible.builtin.include_role:
-  #       name: cloud_connect
-  #       tasks_from: off.yml 
+  post_tasks:
+    - name: Include cloud_connect role (off)
+      ansible.builtin.include_role:
+        name: cloud_connect
+        tasks_from: off.yml 
