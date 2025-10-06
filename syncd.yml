@@ -93,7 +93,7 @@
       loop: '{{ path_list }}'
       # delegate_to: "{{ host }}"
       ignore_errors: yes 
-      when: todo is undefined and toCld
+      when: todo is undefined and  (toCld | bool)
 
     - name: Synchronization using rsync protocol to storage 
       # shell: rsync --ignore-existing -avhrt  "{{ item.cld }}/" "{{ item.local }}/"
@@ -107,7 +107,7 @@
       loop: '{{ path_list }}'
       # delegate_to: "{{ host }}"
       ignore_errors: yes 
-      when: todo is undefined and (not toCld)
+      when: todo is undefined and (not  (toCld | bool))
 
 
     # - name: Unmount nfs mounted volumes
