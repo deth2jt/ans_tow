@@ -37,54 +37,54 @@
       - { remote: '/mnt/user/tmpshr', local: '/mnt/tmpshr11', cld: '/DataVolume/shares/pihad' }
     
 
-  pre_tasks:
-    - name: Include cloud_connect role
-      ansible.builtin.include_role:
-        name: cloud_connect
-        tasks_from: main.yml  
+  # pre_tasks:
+  #   - name: Include cloud_connect role (main)
+  #     ansible.builtin.include_role:
+  #       name: cloud_connect
+  #       tasks_from: main.yml  
 
-    - name: Include cloud_connect role
-      ansible.builtin.include_role:
-        name: cloud_connect
-        tasks_from: on.yml 
+  #   - name: Include cloud_connect role (on)
+  #     ansible.builtin.include_role:
+  #       name: cloud_connect
+  #       tasks_from: on.yml 
 
 
 
   tasks:
-    # - name: Add mnt folder locations 
-    #   ansible.builtin.file:
-    #     path: "{{ item.local }}"
-    #     state: directory
-    #     # owner: foo
-    #     # group: foo
-    #     mode: '0755'
-    #   loop: '{{ path_list }}'
+    - name: Add mnt folder locations 
+      ansible.builtin.file:
+        path: "{{ item.local }}"
+        state: directory
+        # owner: foo
+        # group: foo
+        mode: '0755'
+      loop: '{{ path_list }}'
 
 
-    # - name: Mount NFS volumes
-    #   ansible.posix.mount:
-    #     src: "{{ nfs_srv }}:{{ item.remote }}"
-    #     path: "{{ item.local }}"
-    #     opts: nfsvers=3,rw,relatime,user
-    #     state: mounted
-    #     fstype: nfs
-    #   loop: '{{ path_list }}'
-    #   tags: mount
+    - name: Mount NFS volumes
+      ansible.posix.mount:
+        src: "{{ nfs_srv }}:{{ item.remote }}"
+        path: "{{ item.local }}"
+        opts: nfsvers=3,rw,relatime,user
+        state: mounted
+        fstype: nfs
+      loop: '{{ path_list }}'
+      tags: mount
 
 
-    # - name: Add cld folder locations 
-    #   ansible.builtin.file:
-    #     path: "{{ item.cld }}"
-    #     state: directory
-    #     # owner: foo
-    #     # group: foo
-    #     # mode: '0755'
-    #   loop: '{{ path_list }}'
+    - name: Add cld folder locations 
+      ansible.builtin.file:
+        path: "{{ item.cld }}"
+        state: directory
+        # owner: foo
+        # group: foo
+        # mode: '0755'
+      loop: '{{ path_list }}'
 
     - name: Synchronization using rsync protocol to cld
-      ansible.builtin.debug:
-        msg: '{{ todo is undefined }} - {{ ( toCld) }} - - {{ ( toCld == true  ) }} -- - - {{ ( (toCld | bool) == true  ) }}'
-      # shell: rsync --ignore-existing -avhrt  "{{ item.local }}/" "{{ item.cld }}/"
+      # ansible.builtin.debug:
+      #   msg: '{{ todo is undefined }} - {{ ( toCld) }} - - {{ ( toCld == true  ) }} -- - - {{ ( (toCld | bool) == true  ) }}'
+      shell: rsync --ignore-existing -avhrt  "{{ item.local }}/" "{{ item.cld }}/"
       # ansible.posix.synchronize:
       #   src: "{{ item.local }}/"
       #   # dest: rsync:"{{ mycld }}/{{ item.cld }}/"
@@ -96,9 +96,9 @@
       when: todo is undefined and  (toCld | bool)
 
     - name: Synchronization using rsync protocol to storage 
-      # shell: rsync --ignore-existing -avhrt  "{{ item.cld }}/" "{{ item.local }}/"
-      ansible.builtin.debug:
-        msg: "The value of my_variable is off"
+      shell: rsync --ignore-existing -avhrt  "{{ item.cld }}/" "{{ item.local }}/"
+      # ansible.builtin.debug:
+      #   msg: "The value of my_variable is off"
       # ansible.posix.synchronize:
       #   src: "{{ item.local }}/"
       #   # dest: rsync:"{{ mycld }}/{{ item.cld }}/"
@@ -110,37 +110,37 @@
       when: todo is undefined and (not  (toCld | bool))
 
 
-    # - name: Unmount nfs mounted volumes
-    #   ansible.posix.mount:
-    #     path: "{{ item.local }}"
-    #     state: unmounted
-    #   loop: '{{ path_list }}'
-    #   tags: umount
+    - name: Unmount nfs mounted volumes
+      ansible.posix.mount:
+        path: "{{ item.local }}"
+        state: unmounted
+      loop: '{{ path_list }}'
+      tags: umount
 
-    # - name: Remove nfs locations created
-    #   ansible.builtin.file:
-    #     path: "{{ item.local }}"
-    #     # owner: foo
-    #     # group: foo
-    #     state: "absent"
-    #     # mode: '0755'
-    #   loop: '{{ path_list }}'
+    - name: Remove nfs locations created
+      ansible.builtin.file:
+        path: "{{ item.local }}"
+        # owner: foo
+        # group: foo
+        state: "absent"
+        # mode: '0755'
+      loop: '{{ path_list }}'
 
-    # - name: Pause for 60 seconds before shutdown
-    #   ansible.builtin.pause:
-    #     seconds: 60
+    - name: Pause for 60 seconds before shutdown
+      ansible.builtin.pause:
+        seconds: 60
 
-    # - name: Shutdown device
-    #   shell:  /sbin/shutdown -h -P now
+    - name: Shutdown device
+      shell:  /sbin/shutdown -h -P now
 
-    # - name: Pause for 2 minutes to allow for shutdown
-    #   ansible.builtin.pause:
-    #     minutes: 2
+    - name: Pause for 2 minutes to allow for shutdown
+      ansible.builtin.pause:
+        minutes: 2
 
 
 
-  post_tasks:
-    - name: Include cloud_connect role
-      ansible.builtin.include_role:
-        name: cloud_connect
-        tasks_from: off.yml 
+  # post_tasks:
+  #   - name: Include cloud_connect role (off)
+  #     ansible.builtin.include_role:
+  #       name: cloud_connect
+  #       tasks_from: off.yml 
