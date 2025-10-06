@@ -83,7 +83,7 @@
 
     - name: Synchronization using rsync protocol to cld
       ansible.builtin.debug:
-        msg: '{{ todo is undefined }} - {{ ( toCld) }}'
+        msg: '{{ todo is undefined }} - {{ ( toCld) }} - - {{ ( toCld == true  ) }}'
       # shell: rsync --ignore-existing -avhrt  "{{ item.local }}/" "{{ item.cld }}/"
       # ansible.posix.synchronize:
       #   src: "{{ item.local }}/"
