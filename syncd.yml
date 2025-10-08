@@ -88,11 +88,19 @@
       when: todo is undefined and  (toCld | bool)
 
     - name: Synchronization using rsync protocol to storage 
-      shell: rsync --ignore-existing -avhrt  "{{ item.cld }}/" "{{ item.local }}/"
+      shell: rsync --usermap='{{ remote_user }}':'{{ local_user }}' --ignore-existing -avhrt  "{{ item.cld }}/" "{{ item.local }}/"
       loop: '{{ path_list }}'
       ignore_errors: yes 
       when: todo is undefined and (not  (toCld | bool))
 
+    # - name: Change owner of copied local files to {{ local_user }}
+    #   ansible.builtin.file:
+    #     path: '{{ item.local }}'
+    #     owner: '{{ local_user }}'
+    #     recurse: true
+    #   loop: '{{ path_list }}'
+    #   delegate_to: localhost
+    #   when: todo is undefined and (not  (toCld | bool))
 
     - name: Unmount nfs mounted volumes
       ansible.posix.mount:
