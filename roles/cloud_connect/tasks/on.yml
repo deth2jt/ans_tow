@@ -7,6 +7,7 @@
   delegate_to: localhost
   # no_log: true
   tags: py_tun_on
+  register: my_output
   changed_when: my_output.rc != 0
 
 - name: Wait {{ wait_secs }} seconds, but only start checking after {{ after_time_secs }} seconds
