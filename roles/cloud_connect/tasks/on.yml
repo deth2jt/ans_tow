@@ -5,7 +5,7 @@
     --child="{{ child }}" --tid="{{ tid }}"
   # chdir: /tmp
   delegate_to: localhost
-  no_log: true
+  # no_log: true
   tags: py_tun_on
   changed_when: my_output.rc != 0
 
