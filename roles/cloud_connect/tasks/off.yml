@@ -6,5 +6,6 @@
   # chdir: /tmp
   delegate_to: localhost
   no_log: true
+  register: my_output
   changed_when: my_output.rc != 0
   tags: py_tun_off
