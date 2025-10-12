@@ -1,5 +1,4 @@
 ---
-
 - name: Execute turn on dev script
   ansible.builtin.shell: |
     python library/tplink_cloud_api.py turnonchild --username='{{ usernm }}' --password="{{ passwd }}" --device="{{ dev }}"
@@ -9,3 +8,9 @@
   no_log: true
   tags: py_tun_on
   changed_when: my_output.rc != 0
+
+- name: Wait {{ wait_secs }} seconds, but only start checking after {{ after_time_secs }} seconds
+  ansible.builtin.wait_for_connection:
+    delay: '{{ after_time_secs }}' # 720
+    timeout: '{{ wait_secs }}' # 1440
+  tags: py_tun_on
