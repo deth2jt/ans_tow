@@ -3,7 +3,7 @@
   ansible.builtin.shell: python library/tplink_cloud_api.py turnonchild --username='{{ usernm }}' --password="{{ passwd }}" --device="{{ dev }}" --child="{{ child }}" --tid="{{ tid }}"
   # chdir: /tmp
   delegate_to: localhost
-  # no_log: true
+  no_log: true
   tags: py_tun_on
   register: my_output
   changed_when: my_output.rc != 0
