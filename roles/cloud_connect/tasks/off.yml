@@ -1,8 +1,6 @@
 ---
 - name: Execute turn off dev script
-  ansible.builtin.shell: |
-    python library/tplink_cloud_api.py turnoffchild --username='{{ usernm }}' --password="{{ passwd }}" --device="{{ dev }}"
-    --child="{{ child }}" --tid="{{ tid }}"
+  ansible.builtin.shell: python library/tplink_cloud_api.py turnoffchild --username='{{ usernm }}' --password="{{ passwd }}" --device="{{ dev }}" --child="{{ child }}" --tid="{{ tid }}"
   # chdir: /tmp
   delegate_to: localhost
   no_log: true
