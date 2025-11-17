@@ -30,7 +30,7 @@
         - item.split()[2] is not defined
       loop: "{{ lsblk_output.stdout_lines }}"
       
-    - name: Get disk_2 src# ansible.builtin.debug
+    - name: Get disk_2 src
       ansible.builtin.set_fact:
         uuid_disk2: "{{ uuid_disk2 |   combine({'src':  src_disk })      }}"
       vars:
@@ -99,11 +99,11 @@
         msg: "{{ item }}"
       loop:
         - "{{ uuid_disk1 }}"
-        - "{{uuid_disk2}}"
-        - "{{uuid_disk3}}"
-        - "{{uuid_disk4}}"
-        - "{{uuid_disk5}}"
-        - "{{uuid_disk6}}"
+        - "{{ uuid_disk2 }}"
+        - "{{ uuid_disk3 }}"
+        - "{{ uuid_disk4 }}"
+        - "{{ uuid_disk5 }}"
+        - "{{ uuid_disk6 }}"
 
     # - name: Modify disk of an existing KVM VM
     #   community.libvirt.virt:
@@ -135,7 +135,7 @@
         dest: '{{ file_loc }}.old'
         mode: '0644'
 
-    - name: Replace multiple dev disk lines in {{ my_vm }}
+    - name: Set val with VM XML configuration
       ansible.builtin.set_fact:
         modified_output: "{{ vm_xml_output.stdout }}"
 
@@ -150,17 +150,16 @@
                 <target dev='{{item.target}}'
       loop:
         - "{{ uuid_disk1 }}"
-        - "{{uuid_disk2}}"
-        - "{{uuid_disk3}}"
-        - "{{uuid_disk4}}"
-        - "{{uuid_disk5}}"
-        - "{{uuid_disk6}}"
+        - "{{ uuid_disk2 }}"
+        - "{{ uuid_disk3 }}"
+        - "{{ uuid_disk4 }}"
+        - "{{ uuid_disk5 }}"
+        - "{{ uuid_disk6 }}"
 
     #extracted_content_split: "{{ after_start_str.split(':END')[0] | default('') }}"
     # extracted_content: "{{ full_string | regex_search(start_point + '(.*?)' + end_point, '\\\\1') }}"
     - name: Extract version using regex_search
       ansible.builtin.set_fact:
-        # version: "{{ modified_output | ansible.builtin.regex_search( start + '\\s?' + '(.*?)' + '\\s?' + end, '\\1') }}"
         dev_disk_list: "{{ dev_disk_list +   [ split_string.rsplit('</disk>')[item] + '</disk>' | default('')] }}"
       vars:
         split_string: "{{ modified_output.split('</emulator>')[1] | default('') }}"
