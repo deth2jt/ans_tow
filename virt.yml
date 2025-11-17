@@ -1,0 +1,185 @@
+# https://stackoverflow.com/questions/72403652/lookup-disk-device-elements-in-libvirt-xml-with-ansible
+- name: "Unknown purpose"
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    uuid_disk1: { id: '', target: 'sda', src: '', type: 'unk', size : '9.1T', cont: 1}                                          # VCJUJZYP
+    uuid_disk2: { id: 'f1f01cf8-ba74-4d84-891f-bfcec4fd7f26', target: 'sdb', src: '', type: 'xfs', size: '9.1T', cont: 0}       # VHGEH9XM
+    uuid_disk3: { id: 'b7b7c699-eda8-4729-9552-5e78a043fd24', target: 'sdc', src: '', type: 'xfs', size: '9.1T', cont: 2}       # VHG5VZBM
+    uuid_disk4: { id: '767519c2-ffe2-40c4-b7fe-5fa432eb5aab', target: 'sdd', src: '', type: 'btrfs', size: '476.9G',cont: 3}    # KA22419110A0518
+    uuid_disk5: { id: '44fe44ea-a64e-4ea8-aa0f-9b4a9b506060', target: 'sde', src: '', type: 'btrfs', size: '1.8T', cont: 4}     # SJD1N588911901T4D
+    uuid_disk6: { id: '360cab21-63a3-4edd-b784-a504d194462b', target: 'sdf', src: '', type: 'btrfs', size: '931.5G', cont: 5}   # ASA5M000111005C12
+    file_loc: 'library/virt_update.xml'
+    num_list: 6
+
+  tasks:
+    - name: Print lsblk out
+      ansible.builtin.command: lsblk -o NAME,SIZE,FSTYPE,UUID
+      register: lsblk_output
+      changed_when: false
+
+    - name: Get disk_1 src
+      ansible.builtin.set_fact:
+        uuid_disk1: "{{ uuid_disk1 |   combine({'src':  src_disk })      }}"
+      vars:
+        src_disk: "{{ item.split()[0] | ansible.builtin.regex_replace('[^a-zA-Z]', '')   }}"
+      when:
+        - item.split()[0] is search('sd.*1')
+        - item.split()[1] == uuid_disk1.size
+        - item.split()[2] is not defined
+      loop: "{{ lsblk_output.stdout_lines }}"
+      
+    - name: Get disk_2 src# ansible.builtin.debug
+      ansible.builtin.set_fact:
+        uuid_disk2: "{{ uuid_disk2 |   combine({'src':  src_disk })      }}"
+      vars:
+        src_disk: "{{ item.split()[0] | ansible.builtin.regex_replace('[^a-zA-Z]', '')   }}"
+      when:
+        - item.split()[0] is search('sd.*1')
+        - item.split()[1] == uuid_disk2.size
+        - item.split()[2] is defined and item.split()[2] == uuid_disk2.type
+        - item.split()[3] is defined and item.split()[3] == uuid_disk2.id
+      loop: "{{ lsblk_output.stdout_lines }}"
+
+
+    - name: Get disk_3 src
+      ansible.builtin.set_fact:
+        uuid_disk3: "{{ uuid_disk3 |   combine({'src':  src_disk })      }}"
+      vars:
+        src_disk: "{{ item.split()[0] | ansible.builtin.regex_replace('[^a-zA-Z]', '')   }}"
+      when:
+        - item.split()[0] is search('sd.*1')
+        - item.split()[1] == uuid_disk3.size
+        - item.split()[2] is defined and item.split()[2] == uuid_disk3.type
+        - item.split()[3] is defined and item.split()[3] == uuid_disk3.id
+      loop: "{{ lsblk_output.stdout_lines }}"
+
+
+    - name: Get disk_4 src
+      ansible.builtin.set_fact:
+        uuid_disk4: "{{ uuid_disk4 |   combine({'src':  src_disk })      }}"
+      vars:
+        src_disk: "{{ item.split()[0] | ansible.builtin.regex_replace('[^a-zA-Z]', '')   }}"
+      when:
+        - item.split()[0] is search('sd.*1')
+        - item.split()[1] == uuid_disk4.size
+        - item.split()[2] is defined and item.split()[2] == uuid_disk4.type
+        - item.split()[3] is defined and item.split()[3] == uuid_disk4.id
+      loop: "{{ lsblk_output.stdout_lines }}"
+
+
+    - name: Get disk_5 src
+      ansible.builtin.set_fact:
+        uuid_disk5: "{{ uuid_disk5 |   combine({'src':  src_disk })      }}"
+      vars:
+        src_disk: "{{ item.split()[0] | ansible.builtin.regex_replace('[^a-zA-Z0-9]', '')   }}"
+      when:
+        - item.split()[0] is search('nvme1n1p1')
+        - item.split()[1] == uuid_disk5.size
+        - item.split()[2] is defined and item.split()[2] == uuid_disk5.type
+        - item.split()[3] is defined and item.split()[3] == uuid_disk5.id
+      loop: "{{ lsblk_output.stdout_lines }}"
+
+    - name: Get disk_6 src
+      ansible.builtin.set_fact:
+        uuid_disk6: "{{ uuid_disk6 |   combine({'src':  src_disk })      }}"
+      vars:
+        src_disk: "{{ item.split()[0] | ansible.builtin.regex_replace('[^a-zA-Z0-9]', '')   }}"
+      when:
+        - item.split()[0] is search('nvme0n1p1')
+        - item.split()[1] == uuid_disk6.size
+        - item.split()[2] is defined and item.split()[2] == uuid_disk6.type
+        - item.split()[3] is defined and item.split()[3] == uuid_disk6.id
+      loop: "{{ lsblk_output.stdout_lines }}"
+
+
+    - name: Print updated list
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop:
+        - "{{ uuid_disk1 }}"
+        - "{{uuid_disk2}}"
+        - "{{uuid_disk3}}"
+        - "{{uuid_disk4}}"
+        - "{{uuid_disk5}}"
+        - "{{uuid_disk6}}"
+
+    # - name: Modify disk of an existing KVM VM
+    #   community.libvirt.virt:
+    #     name: '{{ vm }}'
+    #     command: update_disk
+    #     disk:
+    #       - device: disk
+    #         type: file
+    #         source: '{{ uuid_disk1.src }}'
+    #         target: '{{uuid_disk1.target}}' # Or vdb, vdc, etc.
+    #         # bus: virtio # Or ide, scsi, etc.
+    #         state: present # Ensure the disk is present with these settings
+    #         # Add or modify other disk parameters as needed, e.g.,
+    #         # cache: writeback
+    #         # iothread: '1'
+
+    - name: Get {{ my_vm }} VM XML configuration
+      ansible.builtin.command: virsh dumpxml '{{my_vm}}'
+      register: vm_xml_output
+
+    - name: Print {{ my_vm }} VM XML
+      ansible.builtin.debug:
+        var: vm_xml_output.stdout
+
+
+    - name: Write old {{ my_vm }} dev changes to file 
+      ansible.builtin.copy:
+        content: "{{ vm_xml_output.stdout }}"
+        dest: '{{ file_loc }}.old'
+        mode: '0644'
+
+    - name: Replace multiple dev disk lines in {{ my_vm }}
+      ansible.builtin.set_fact:
+        modified_output: "{{ vm_xml_output.stdout }}"
+
+    - name: Replace multiple dev src disk lines in {{ my_vm }}
+      ansible.builtin.set_fact:
+        modified_output: "{{ modified_output | ansible.builtin.regex_replace(regexp, replacement, multiline=True) }}"
+      vars:
+        regexp: "<source dev='/dev/sd.'/>(\\s?)\n(\\s+)<backingStore/>(\\s?)\n(\\s+)<target dev='{{item.target}}'" 
+        replacement: |-
+          <source dev='/dev/{{item.src}}'/>
+                <backingStore/>
+                <target dev='{{item.target}}'
+      loop:
+        - "{{ uuid_disk1 }}"
+        - "{{uuid_disk2}}"
+        - "{{uuid_disk3}}"
+        - "{{uuid_disk4}}"
+        - "{{uuid_disk5}}"
+        - "{{uuid_disk6}}"
+
+    #extracted_content_split: "{{ after_start_str.split(':END')[0] | default('') }}"
+    # extracted_content: "{{ full_string | regex_search(start_point + '(.*?)' + end_point, '\\\\1') }}"
+    - name: Extract version using regex_search
+      ansible.builtin.set_fact:
+        # version: "{{ modified_output | ansible.builtin.regex_search( start + '\\s?' + '(.*?)' + '\\s?' + end, '\\1') }}"
+        dev_disk_list: "{{ dev_disk_list +   [ split_string.rsplit('</disk>')[item] + '</disk>' | default('')] }}"
+      vars:
+        split_string: "{{ modified_output.split('</emulator>')[1] | default('') }}"
+        dev_disk_list: []
+      loop: "{{ range(num_list) | list }}"
+
+
+    - name: Debug IT
+      ansible.builtin.debug:
+        msg: "{{ dev_disk_list }}"
+
+    - name: Loop through dev list
+      ansible.builtin.include_tasks: library/updatee_virt_vm.yml
+      loop: "{{ dev_disk_list }}"
+      loop_control:
+        loop_var: item 
+
+    - name: Start a VM
+      community.libvirt.virt:
+        name: '{{ my_vm }}' 
+        state: running
+    
