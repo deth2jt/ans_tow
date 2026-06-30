@@ -12,6 +12,7 @@
     uuid_disk6: { id: '360cab21-63a3-4edd-b784-a504d194462b', target: 'sdf', src: '', type: 'btrfs', size: '931.5G', cont: 5}   # ASA5M000111005C12
     file_loc: 'library/virt_update.xml'
     num_list: 6
+    endplayStr: 'ENDPLAY'
 
   tasks:
     - name: Print lsblk out
@@ -22,7 +23,7 @@
 
     - name: Get src disk for all listed disks
       ansible.builtin.set_fact:
-        disks_list: "{{ disks_list | default([]) + [(item | disk_select(lsblk_output.stdout_lines))] }}"
+        disks_list: "{{ disks_list | default([]) + [(item | disk_select(lsblk_output.stdout_lines, endplayStr))] }}"
       loop:
         - '{{ uuid_disk1 | to_json | string }}'
         - '{{ uuid_disk2 | to_json | string }}'
@@ -32,6 +33,10 @@
         - '{{ uuid_disk6 | to_json | string }}'
 
 
+    - name: Halt the play if one of the disk src was not found
+      ansible.builtin.meta: end_play
+      when: endplayStr in (disks_list | map(attribute='src') | list)  
+        
     - name: Print a disks list
       debug:
         var:  item.target

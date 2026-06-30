@@ -9,10 +9,8 @@ class FilterModule(object):
             'disk_select': self.a_filter
         }
 
-    def a_filter(self, disk, disk_list):
+    def a_filter(self, disk, disk_list, endStr):
         disk = ast.literal_eval(disk)
-        # disk_dict.get('id')
-        all = ''
         for item in disk_list:
             if  disk['id'] == '' and  len(item.split()) == 2   and re.search(r'sd.*1',item.split()[0]):
                 if ( disk.get('size') == item.split()[1].strip()  ):
@@ -25,7 +23,6 @@ class FilterModule(object):
                 elif (re.search(r'sd.*1',item.split()[0])):
                     disk['src'] =  re.sub(r"[^a-zA-Z]", "", item.split()[0])
                     return disk
-            else:
-                disk['src'] = ''
-                return disk
-        
+            # else:
+        disk['src'] = endStr
+        return disk        
