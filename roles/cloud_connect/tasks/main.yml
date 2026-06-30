@@ -16,7 +16,3 @@
     - urllib3
   delegate_to: localhost
   tags: py_setup
-
-
-
-

@@ -80,13 +80,14 @@
         mode: '0755'
       loop: '{{ path_list }}'
 
+    
     - name: Synchronization using rsync protocol to cld
-
       shell: rsync --ignore-existing -avhrt  "{{ item.local }}/" "{{ item.cld }}/"
       loop: '{{ path_list }}'
       ignore_errors: yes 
       when: todo is undefined and  (toCld | bool)
 
+    #TODO check space on disk
     - name: Synchronization using rsync protocol to storage 
       shell: rsync --usermap='{{ remote_user }}':'{{ local_user }}' --ignore-existing -avhrt  "{{ item.cld }}/" "{{ item.local }}/"
       loop: '{{ path_list }}'

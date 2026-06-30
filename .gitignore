@@ -3,3 +3,4 @@ ansible.cfg
 .vscode/*
 .ansible/.lock
 library/virt_update.xml.old
+filter_plugins/__pycache__/disk_select.cpython-39.pyc
