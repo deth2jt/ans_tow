@@ -1,3 +1,4 @@
+---
 # https://stackoverflow.com/questions/72403652/lookup-disk-device-elements-in-libvirt-xml-with-ansible
 - name: "Unknown purpose"
   hosts: localhost
