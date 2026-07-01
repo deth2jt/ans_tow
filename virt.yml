@@ -43,7 +43,7 @@
         
     - name: Print a disks list
       debug:
-        var:  item.target
+        var:  item.src
       loop: "{{ disks_list }}"
       tags: ['incasesowntwrong', 'incasesowntwrongXML']
 
