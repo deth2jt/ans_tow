@@ -19,6 +19,7 @@
       ansible.builtin.command: lsblk -o NAME,SIZE,FSTYPE,UUID
       register: lsblk_output
       changed_when: false
+      tags: ['incasesowntwrong', 'incasesowntwrongXML']
 
 
     - name: Get src disk for all listed disks
@@ -31,26 +32,31 @@
         - '{{ uuid_disk4 | to_json | string }}'
         - '{{ uuid_disk5 | to_json | string }}'
         - '{{ uuid_disk6 | to_json | string }}'
+      tags: ['incasesowntwrong', 'incasesowntwrongXML']
 
 
     - name: Halt the play if one of the disk src was not found
       ansible.builtin.meta: end_play
       when: endplayStr in (disks_list | map(attribute='src') | list)  
+      tags: ['incasesowntwrong', 'incasesowntwrongXML']
         
     - name: Print a disks list
       debug:
         var:  item.target
       loop: "{{ disks_list }}"
+      tags: ['incasesowntwrong', 'incasesowntwrongXML']
 
     
 
     - name: Get {{ my_vm }} VM XML configuration
       ansible.builtin.command: virsh dumpxml '{{my_vm}}'
       register: vm_xml_output
+      tags: ['incasesowntwrongXML']
 
     - name: Print {{ my_vm }} VM XML
       ansible.builtin.debug:
         var: vm_xml_output.stdout
+      tags: ['incasesowntwrongXML']
 
 
     - name: Write old {{ my_vm }} dev changes to file 
@@ -58,10 +64,12 @@
         content: "{{ vm_xml_output.stdout }}"
         dest: '{{ file_loc }}.old'
         mode: '0644'
+      tags: ['incasesowntwrongXML']
 
     - name: Set val with VM XML configuration
       ansible.builtin.set_fact:
         modified_output: "{{ vm_xml_output.stdout }}"
+      tags: ['incasesowntwrongXML']
 
     - name: Replace multiple dev src disk lines in {{ my_vm }}
       ansible.builtin.set_fact:
@@ -73,6 +81,7 @@
                 <backingStore/>
                 <target dev='{{item.target}}'
       loop: "{{ disks_list }}"
+      tags: ['incasesowntwrongXML']
 
 
     - name: Extract version using regex_search
@@ -82,11 +91,13 @@
         split_string: "{{ modified_output.split('</emulator>')[1] | default('') }}"
         dev_disk_list: []
       loop: "{{ range(num_list) | list }}"
-
+      tags: ['incasesowntwrongXML']
 
     - name: Debug IT
       ansible.builtin.debug:
         msg: "{{ dev_disk_list }}"
+      tags: ['incasesowntwrongXML']
+        
 
     - name: Loop through dev list
       ansible.builtin.include_tasks: library/updatee_virt_vm.yml
