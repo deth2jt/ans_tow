@@ -12,7 +12,6 @@
     uuid_disk5: { id: '44fe44ea-a64e-4ea8-aa0f-9b4a9b506060', target: 'sde', src: '', type: 'btrfs', size: '1.8T', cont: 4}     # SJD1N588911901T4D
     uuid_disk6: { id: '360cab21-63a3-4edd-b784-a504d194462b', target: 'sdf', src: '', type: 'btrfs', size: '931.5G', cont: 5}   # ASA5M000111005C12
     file_loc: 'library/virt_update.xml'
-    num_list: 6
     endplayStr: 'ENDPLAY'
 
   tasks:
@@ -91,7 +90,7 @@
       vars:
         split_string: "{{ modified_output.split('</emulator>')[1] | default('') }}"
         dev_disk_list: []
-      loop: "{{ range(num_list) | list }}"
+      loop: "{{ range(disks_list | length) | list  }}"
       tags: ['incasesowntwrongXML']
 
     - name: Debug IT
