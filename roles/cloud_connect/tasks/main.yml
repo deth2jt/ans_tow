@@ -1,0 +1,18 @@
+---
+# tasks file for cloud_coonect
+- name: Install python package
+  ansible.builtin.pip:
+    name: '{{ item }}'
+  loop:
+    - argparse
+    - certifi
+    # - json
+    # - pdb
+    # - pprint
+    # - ssl
+    # - sys
+    # - time
+    - typing
+    - urllib3
+  delegate_to: localhost
+  tags: py_setup

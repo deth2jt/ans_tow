@@ -35,37 +35,22 @@
       - { remote: '/mnt/user/nfs', local: '/mnt/nfs11', cld: '/DataVolume/shares/Bump' }
       - { remote: '/mnt/user/vmdata', local: '/mnt/vmdata11', cld: '/DataVolume/shares/dtad' }
       - { remote: '/mnt/user/tmpshr', local: '/mnt/tmpshr11', cld: '/DataVolume/shares/pihad' }
+    
+
+  pre_tasks:
+    - name: Include cloud_connect role (main)
+      ansible.builtin.include_role:
+        name: cloud_connect
+        tasks_from: main.yml  
+
+    - name: Include cloud_connect role (on)
+      ansible.builtin.include_role:
+        name: cloud_connect
+        tasks_from: on.yml 
+
+
 
   tasks:
-    - name: Install python package
-      ansible.builtin.pip:
-        name: '{{ item }}'
-      loop:
-        - argparse
-        - certifi
-        # - json
-        # - pdb
-        # - pprint
-        # - ssl
-        # - sys
-        # - time
-        - typing 
-        - urllib3
-      delegate_to: localhost
-
-    - name: execute turn on dev script
-      # ansible.builtin.script:
-      shell: python library/tplink_cloud_api.py turnonchild --username='{{ usernm }}' --password="{{ passwd }}" --device="{{ dev }}" --child="{{ child }}" --tid="{{ tid }}"
-        # chdir: /tmp
-      delegate_to: localhost
-      no_log: True
-
-    - name: Wait 1440 seconds, but only start checking after 720 seconds
-      ansible.builtin.wait_for_connection:
-        delay: 720
-        timeout: 1440
-
-
     - name: Add mnt folder locations 
       ansible.builtin.file:
         path: "{{ item.local }}"
@@ -91,23 +76,32 @@
       ansible.builtin.file:
         path: "{{ item.cld }}"
         state: directory
-        # owner: foo
-        # group: foo
-        # mode: '0755'
+
+        mode: '0755'
       loop: '{{ path_list }}'
 
-    - name: Synchronization using rsync protocol on cld
+    
+    - name: Synchronization using rsync protocol to cld
       shell: rsync --ignore-existing -avhrt  "{{ item.local }}/" "{{ item.cld }}/"
-      # ansible.posix.synchronize:
-      #   src: "{{ item.local }}/"
-      #   # dest: rsync:"{{ mycld }}/{{ item.cld }}/"
-      #   dest: "{{ item.cld }}/"
-      # delegate_to: localhost
       loop: '{{ path_list }}'
-      # delegate_to: "{{ host }}"
       ignore_errors: yes 
-      when: todo is undefined
+      when: todo is undefined and  (toCld | bool)
 
+    #TODO check space on disk
+    - name: Synchronization using rsync protocol to storage 
+      shell: rsync --usermap='{{ remote_user }}':'{{ local_user }}' --ignore-existing -avhrt  "{{ item.cld }}/" "{{ item.local }}/"
+      loop: '{{ path_list }}'
+      ignore_errors: yes 
+      when: todo is undefined and (not  (toCld | bool))
+
+    # - name: Change owner of copied local files to {{ local_user }}
+    #   ansible.builtin.file:
+    #     path: '{{ item.local }}'
+    #     owner: '{{ local_user }}'
+    #     recurse: true
+    #   loop: '{{ path_list }}'
+    #   delegate_to: localhost
+    #   when: todo is undefined and (not  (toCld | bool))
 
     - name: Unmount nfs mounted volumes
       ansible.posix.mount:
@@ -119,10 +113,7 @@
     - name: Remove nfs locations created
       ansible.builtin.file:
         path: "{{ item.local }}"
-        # owner: foo
-        # group: foo
         state: "absent"
-        # mode: '0755'
       loop: '{{ path_list }}'
 
     - name: Pause for 60 seconds before shutdown
@@ -136,9 +127,10 @@
       ansible.builtin.pause:
         minutes: 2
 
-    - name: execute turn off dev script
-      # ansible.builtin.script:
-      shell: python library/tplink_cloud_api.py turnoffchild --username='{{ usernm }}' --password="{{ passwd }}" --device="{{ dev }}" --child="{{ child }}" --tid="{{ tid }}"
-        # chdir: /tmp
-      delegate_to: localhost
-      no_log: True
+
+
+  post_tasks:
+    - name: Include cloud_connect role (off)
+      ansible.builtin.include_role:
+        name: cloud_connect
+        tasks_from: off.yml 

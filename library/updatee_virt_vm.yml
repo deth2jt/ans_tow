@@ -1,0 +1,19 @@
+  - name: Write modded {{ my_vm }} dev changes to file
+    ansible.builtin.copy:
+      content: "{{ item }}"
+      dest: '{{ file_loc }}'
+      mode: '0644'
+
+  - name: Debug {{ my_vm }} modded VM XML
+    ansible.builtin.debug:
+      var: item    
+
+  - name: Execute vm dev preference update
+    ansible.builtin.command: virsh update-device {{ my_vm }} {{ file_loc }} --persistent
+    register: virsh_output
+    changed_when: false
+
+  - name: Ensure {{ file_loc }} xml file is removed
+    ansible.builtin.file:
+      path: '{{ file_loc }}'
+      state: absent
