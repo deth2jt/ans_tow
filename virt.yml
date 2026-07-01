@@ -86,10 +86,9 @@
 
     - name: Extract version using regex_search
       ansible.builtin.set_fact:
-        dev_disk_list: "{{ dev_disk_list +   [ split_string.rsplit('</disk>')[item] + '</disk>' | default('')] }}"
+        dev_disk_list: "{{ dev_disk_list  | default([]) + [ split_string.rsplit('</disk>')[item] + '</disk>' | default('')] }}"
       vars:
         split_string: "{{ modified_output.split('</emulator>')[1] | default('') }}"
-        dev_disk_list: []
       loop: "{{ range(disks_list | length) | list  }}"
       tags: ['incasesowntwrongXML']
 
