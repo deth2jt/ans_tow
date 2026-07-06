@@ -1,8 +1,8 @@
-  # - name: Write modded {{ my_vm }} dev changes to file
-  #   ansible.builtin.copy:
-  #     content: "{{ item }}"
-  #     dest: '{{ file_loc }}'
-  #     mode: '0644'
+  - name: Write modded {{ my_vm }} dev changes to file
+    ansible.builtin.copy:
+      content: "{{ item }}"
+      dest: '{{ file_loc }}'
+      mode: '0644'
 
   - name: Debug {{ my_vm }} modded VM XML
     ansible.builtin.debug:
@@ -13,7 +13,7 @@
     register: virsh_output
     changed_when: false
 
-  # - name: Ensure {{ file_loc }} xml file is removed
-  #   ansible.builtin.file:
-  #     path: '{{ file_loc }}'
-  #     state: absent
+  - name: Ensure {{ file_loc }} xml file is removed
+    ansible.builtin.file:
+      path: '{{ file_loc }}'
+      state: absent
