@@ -5,8 +5,8 @@
   gather_facts: false
 
   vars:
-    # uuid_disk1: { id: '', target: 'sda', src: '', type: 'unk', size : '9.1T', cont: 1}                                          # VCJUJZYP
-    uuid_disk1: { id: 'cf851fbc-ad26-4cb3-869a-69bef61fabef', target: 'sda', src: '', type: 'xfs', size : '9.1T', cont: 1}                                          # VCJUJZYP
+    # uuid_disk1: { id: '', target: 'sda', src: '', type: 'unk', size : '9.1T', cont: 1}                                        # VCJUJZYP
+    uuid_disk1: { id: 'cf851fbc-ad26-4cb3-869a-69bef61fabef', target: 'sda', src: '', type: 'xfs', size : '9.1T', cont: 1}      # VCJUJZYP
     uuid_disk2: { id: 'f1f01cf8-ba74-4d84-891f-bfcec4fd7f26', target: 'sdb', src: '', type: 'xfs', size: '9.1T', cont: 0}       # VHGEH9XM
     uuid_disk3: { id: 'b7b7c699-eda8-4729-9552-5e78a043fd24', target: 'sdc', src: '', type: 'xfs', size: '9.1T', cont: 2}       # VHG5VZBM
     uuid_disk4: { id: '767519c2-ffe2-40c4-b7fe-5fa432eb5aab', target: 'sdd', src: '', type: 'btrfs', size: '476.9G',cont: 3}    # KA22419110A0518
